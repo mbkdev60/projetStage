@@ -40,7 +40,7 @@ function ModalUpdate2({
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>Modification produit</Modal.Title>
+				<Modal.Title>Modification du produit</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<div className="d-flex flex-column bd-highlight mb-3">
