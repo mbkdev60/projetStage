@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import produits from "../../components/images/produits.jpg";
 import ModalUpdateOrder from "./ModalUpdateOrder";
+import Swal from "sweetalert2"; //pour le pop-up confirmation panier
+import Select from "react-select"; 
 
 function Order() {
 	const [product, setProduct] = React.useState();
@@ -9,7 +11,7 @@ function Order() {
 	const [listProducts, setListProducts] = useState([]);
 	const [update, setIsUpdate] = React.useState<boolean>(false);
 	const [show, setShow] = React.useState(false);
-	const handleShow = () => setShow(true);
+	const [tot, setTot] = React.useState(0);
 
 	const [tabCommand, setTabCommand] = useState<any>([]);
 
@@ -29,8 +31,6 @@ function Order() {
 			);
 	}
 
-	const [tot, setTot] = React.useState(0);
-
 	function totalOrder() {
 		let Somme = 0;
 		tabCommand.forEach((element: any) => {
@@ -38,6 +38,66 @@ function Order() {
 		});
 
 		setTot(Somme);
+	}
+
+	async function insertOrder() {
+		var today = new Date();
+
+		await fetch(`http://localhost:5003/addglobalorder`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				user_id: 17, /// id_client pas encore fait
+				dateorder:
+					today.getDate() + "-" + today.getMonth() + "-" + today.getFullYear(),
+				montanttotal: tot,
+			}),
+		})
+			.then((res) => res.json())
+			.then(
+				(result) => {
+					for (const element of tabCommand) {
+						detailOrder(element, result.order_id);
+						// pour le pop-up on utilise swal.fire
+						Swal.fire({
+							title: "Merci pour votre commande",
+							icon: "success",
+							confirmButtonText: "Ok",
+						});
+						// window.location.reload();
+					}
+				},
+
+				(error) => {
+					console.log(error);
+				}
+			);
+	}
+
+	async function detailOrder(element: any, id: any) {
+		await fetch(`http://localhost:5003/addproductorder`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				user_id: 17,
+				order_id: id,
+				nom: element.Nom,
+				prixunitaire: element.Prix,
+				image: element.Image,
+				quantite: element.Quantité,
+				prixtotal: element.Total,
+			}),
+		})
+			.then((res) => res.json())
+			.then(
+				(result) => {
+					console.log(result);
+				},
+
+				(error) => {
+					console.log(error);
+				}
+			);
 	}
 
 	useEffect(() => {
@@ -67,7 +127,7 @@ function Order() {
 														variant="success"
 														onClick={() => {
 															setProduct(product);
-															handleShow();
+															setShow(true);
 														}}
 													>
 														Ajouter
@@ -128,15 +188,26 @@ function Order() {
 								);
 							})}
 						</tbody>
-						<tfoot>
-							
-								<th> Total du panier</th>
-								<td> {tot} €</td>
-								
-						</tfoot>
 					</table>
+					<div className="d-flex justify-content-between">
+						<div className="fas fa-divide ">
+							<h5>Total du panier = {tot} €</h5>
+						</div>
+						<div className="p-2 bd-highlight">
+							<Button
+								variant="success"
+								onClick={() => {
+									insertOrder();
+
+									// window.location.reload();
+								}}
+							>
+								commander
+							</Button>
+						</div>
+					</div>
 				</div>
-			</div> 
+			</div>
 		</div>
 	);
 }
