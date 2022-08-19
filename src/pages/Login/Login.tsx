@@ -12,7 +12,7 @@ function Login({ setlogin, setuserlogin }: logintype) {
 	});
 
   async function checkUser() {
-	console.log("entre");
+	
 	fetch("http://localhost:5003/getuser", {
 	  method: "POST",
 	  headers: { "Content-Type": "application/json" },
