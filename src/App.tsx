@@ -7,6 +7,7 @@ import Client from "./pages/Client/Client";
 import Home from "./pages/Home";
 import Products from "./pages/Products/Products";
 import Order from "./pages/Order/Order";
+import History from "./pages/History/History";
 import User from "./pages/Login/User";
 import classNames from "classnames";
 
@@ -36,6 +37,7 @@ const App: React.FunctionComponent = () => {
 							<Route path="/client" element={<Client />} />
 							<Route path="/products" element={<Products />} />
 							<Route path="/order" element={<Order />} />
+							<Route path="/history" element={<History />} />
 						</Routes>
 					</div>
 				</Router>
