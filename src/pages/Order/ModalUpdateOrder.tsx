@@ -33,7 +33,7 @@ function ModalUpdateOrder({
 
 	return (
 		<Modal show={show} onHide={handleClose}>
-			<Modal.Header closeButton>
+			<Modal.Header>
 				<Modal.Title>Modifier votre panier</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
