@@ -39,7 +39,7 @@ function ModalUpdate2({
 
 	return (
 		<Modal show={show} onHide={handleClose}>
-			<Modal.Header closeButton>
+			<Modal.Header>
 				<Modal.Title>Modification du produit</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
