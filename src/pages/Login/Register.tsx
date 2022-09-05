@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button, Input, Label } from "reactstrap";
 
 type logintype = {
 	
@@ -53,10 +54,10 @@ function Register({ setlogin}: logintype) {
 									</div>
 									<form>
 										<div className="form-outline mb-4">
-											<label className="form-label" htmlFor="form3Example3cg">
+											<Label className="form-label" htmlFor="form3Example3cg">
 												Lastname :
-											</label>
-											<input
+											</Label>
+											<Input
 												type="text"
 												id="form3Example3cg"
 												className="form-control form-control-lg"
@@ -68,10 +69,10 @@ function Register({ setlogin}: logintype) {
 										</div>
 
 										<div className="form-outline mb-4">
-											<label className="form-label" htmlFor="form3Example3cg">
+											<Label className="form-label" htmlFor="form3Example3cg">
 												Firstname :
-											</label>
-											<input
+											</Label>
+											<Input
 												type="text"
 												id="form3Example3cg"
 												className="form-control form-control-lg"
@@ -83,11 +84,11 @@ function Register({ setlogin}: logintype) {
 										</div>
 
 										<div className="form-outline mb-4">
-											<label className="form-label" htmlFor="form3Example5cg">
+											<Label className="form-label" htmlFor="form3Example5cg">
 												Email :
-											</label>
-											<input
-												type="mail"
+											</Label>
+											<Input
+												type="email"
 												id="form3Example5cg"
 												className="form-control form-control-lg"
 												onChange={(e: any) => {
@@ -98,13 +99,13 @@ function Register({ setlogin}: logintype) {
 										</div>
 
 										<div className="form-outline mb-4">
-											<label
+											<Label
 												className="form-label mt-5"
 												htmlFor="form3Example4cg"
 											>
 												Password :
-											</label>
-											<input
+											</Label>
+											<Input
 												type="password"
 												id="form3Example4cg"
 												className="form-control form-control-lg"
@@ -119,12 +120,12 @@ function Register({ setlogin}: logintype) {
 											className="form-check d-flex justify-content-center mb-3
 										"
 										>
-											<input
+											<Input
 												className="form-check-input me-2"
 												type="checkbox"
 												id="form2Example3cg"
 											/>
-											<label
+											<Label
 												className="form-check-label"
 												htmlFor="form2Example3g"
 											>
@@ -132,16 +133,16 @@ function Register({ setlogin}: logintype) {
 												<a href="#!" className="text-body">
 													<u>Terms of service</u>
 												</a>
-											</label>
+											</Label>
 										</div>
 										<div className="d-flex justify-content-center">
-											<button
+											<Button
 												type="button"
 												className="btn btn-success btn-block btn-lg gradient-custom-8text-body"
 												onClick={addUser}
 											>
 												Submit
-											</button>
+											</Button>
 										</div>
 										{/* <div>
 											<label
