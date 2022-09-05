@@ -1,4 +1,3 @@
-import React from "react";
 import * as FaIcons from "react-icons/fa";
 
 export const SidebarData = [
@@ -22,6 +21,9 @@ export const SidebarData = [
 		path: "/order",
 		icon: <FaIcons.FaCartPlus />,
 	},
+	{
+		title: "History",
+		path: "/history",
+		icon: <FaIcons.FaHistory />,
+	},
 ];
-
-
