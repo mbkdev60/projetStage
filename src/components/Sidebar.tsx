@@ -11,7 +11,7 @@ const Navbar = styled.div`
 	justify-content: start;
 	align-items: center;
 	height: 3.5rem;
-	background-color: #19b5cd;
+	background-color: #99f3f9;
 `;
 
 const MenuIconOpen = styled(Link)`
@@ -19,7 +19,7 @@ const MenuIconOpen = styled(Link)`
 	justify-content: start;
 	font-size: 1.5rem;
 	margin-left: 2rem;
-	color: #ffffff;
+	color: #122878;
 `;
 
 const MenuIconClose = styled(Link)`
@@ -28,13 +28,13 @@ const MenuIconClose = styled(Link)`
 	font-size: 1.5rem;
 	margin-top: 0.75rem;
 	margin-right: 1rem;
-	color: #ffffff;
+	color: #122878;
 `;
 
 const SidebarMenu = styled.div<{ close: boolean }>`
 	width: 250px;
 	height: 100vh;
-	background-color: #19b5cd;
+	background-color: #99f3f9;
 	position: fixed;
 	top: 0;
 	left: ${({ close }) => (close ? "0" : "-100%")};
@@ -57,11 +57,11 @@ const MenuItemLinks = styled(Link)`
 	padding: 0 2rem;
 	font-size: 20px;
 	text-decoration: none;
-	color: #ffffff;
+	color: #122878;
 
 	&:hover {
-		background-color: #ffffff;
-		color: #19b5cd;
+		background-color: #22c4f5;
+		color: #fff;
 		width: 100%;
 		height: 45px;
 		text-align: center;
@@ -83,12 +83,17 @@ function Sidebar({ setuser, close, setClose }: logintype) {
 
 	return (
 		<>
-			<Navbar className="d-flex justify-content-around">
-				<MenuIconOpen to="#" onClick={showSidebar}>
+			<Navbar className="d-flex justify-content-between">
+				<MenuIconOpen
+					to="#"
+					onClick={showSidebar}
+					style={{ marginLeft: "80px" }}
+				>
 					<FaIcons.FaBars />
 				</MenuIconOpen>
 				<Button
-					variant="primary"
+					style={{ marginRight: "40px" }}
+					className=" btn btn-info btn-rounded"
 					onClick={(e: any) => {
 						localStorage.removeItem("user");
 						localStorage.removeItem("user_id");
