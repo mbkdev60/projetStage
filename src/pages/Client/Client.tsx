@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button } from "react-bootstrap";
+
 import ModalAdd from "./ModalAdd";
 import ModalUpdate from "./ModalUpdate";
+
 import user from "../../components/images/user.png";
 
 // const TaskText = styled.div`
@@ -59,7 +61,7 @@ function Clients() {
 				(result) => {
 					setListClients(result);
 				},
-				
+
 				(error) => {
 					console.log(error);
 				}
@@ -80,48 +82,50 @@ function Clients() {
 			/>
 
 			<div className="row my-5">
-				{listClients.map((client: any) => {
-					return (
-						<div className="col-4 mr-5 mt-2">
-							<Card style={{ width: "19rem" }}>
-								<Card.Img variant="top" src={user} />
-								<Card.Body>
-									<Card.Title>Nom : {client.nom}</Card.Title>
-									<Card.Title>Prénom : {client.prenom}</Card.Title>
-									<Card.Title>Email : {client.mail}</Card.Title>
-									<Card.Title>Adresse : {client.add}</Card.Title>
-									<Card.Title>Téléphone : {client.tel}</Card.Title>
-									<div className="d-flex justify-content-between">
-										<div className="p-2 bd-highlight">
-											<Button
-												variant="danger"
-												onClick={() => {
-													console.log({ id: client.client_id });
-													delClient(client.client_id);
-												}}
-											>
-												supprimer
-											</Button>
-										</div>
+				{listClients
+					// .filter((element: any) => (element.nom === "vxvx"))
+					.map((client: any) => {
+						return (
+							<div className="col-4 mr-5 mt-2">
+								<Card style={{ width: "19rem" }}>
+									<Card.Img variant="top" src={user} />
+									<Card.Body>
+										<Card.Title>Nom : {client.nom}</Card.Title>
+										<Card.Title>Prénom : {client.prenom}</Card.Title>
+										<Card.Title>Email : {client.mail}</Card.Title>
+										<Card.Title>Adresse : {client.add}</Card.Title>
+										<Card.Title>Téléphone : {client.tel}</Card.Title>
+										<div className="d-flex justify-content-between">
+											<div className="p-2 bd-highlight">
+												<Button
+													variant="danger"
+													onClick={() => {
+														console.log({ id: client.client_id });
+														delClient(client.client_id);
+													}}
+												>
+													supprimer
+												</Button>
+											</div>
 
-										<div className="p-2 bd-highlight">
-											<Button
-												variant="info"
-												onClick={() => {
-													setidclient(client.client_id);
-													setClient(client);
-													handleShow();
-												}}
-											>
-												modifier
-											</Button>
+											<div className="p-2 bd-highlight">
+												<Button
+													variant="info"
+													onClick={() => {
+														setidclient(client.client_id);
+														setClient(client);
+														handleShow();
+													}}
+												>
+													modifier
+												</Button>
+											</div>
 										</div>
-									</div>
-								</Card.Body>
-							</Card>
-						</div>
-					);
-				})}
+									</Card.Body>
+								</Card>
+							</div>
+						);
+					})}
 				<ModalUpdate
 					clientUpdate={client}
 					setClientUpdate={setClient}
