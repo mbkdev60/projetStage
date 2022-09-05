@@ -3,17 +3,38 @@ import { Button, Card } from "react-bootstrap";
 import produits from "../../components/images/produits.jpg";
 import ModalUpdateOrder from "./ModalUpdateOrder";
 import Swal from "sweetalert2"; //pour le pop-up confirmation panier
-import Select from "react-select"; 
+import Select from "react-select";
 
 function Order() {
 	const [product, setProduct] = React.useState();
-	// liste clients
 	const [listProducts, setListProducts] = useState([]);
 	const [update, setIsUpdate] = React.useState<boolean>(false);
 	const [show, setShow] = React.useState(false);
 	const [tot, setTot] = React.useState(0);
-
 	const [tabCommand, setTabCommand] = useState<any>([]);
+	const [listClients, setListClients] = useState([]);
+	const [selectedOption, setSelectedOption] = useState(0);
+
+	function getClients() {
+		fetch(`http://localhost:5003/clients/${localStorage.getItem("user_id")}`, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then(
+				(result) => {
+					setListClients(result);
+				},
+
+				(error) => {
+					console.log(error);
+				}
+			);
+	}
+
+	const results: any = [];
+	listClients.forEach((element: any, index: any) => {
+		results.push({ value: element.client_id, label: element.nom });
+	});
 
 	function getProducts() {
 		fetch(`http://localhost:5003/products/${localStorage.getItem("user_id")}`, {
@@ -42,36 +63,48 @@ function Order() {
 
 	async function insertOrder() {
 		var today = new Date();
+		// console.log("🚀 ~ file: order.tsx ~ line 66 ~ insertOrder ~ today", today);
+		// console.log(Date());
 
-		await fetch(`http://localhost:5003/addglobalorder`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				user_id: 17, /// id_client pas encore fait
-				dateorder:
-					today.getDate() + "-" + today.getMonth() + "-" + today.getFullYear(),
-				montanttotal: tot,
-			}),
-		})
-			.then((res) => res.json())
-			.then(
-				(result) => {
-					for (const element of tabCommand) {
-						detailOrder(element, result.order_id);
-						// pour le pop-up on utilise swal.fire
-						Swal.fire({
-							title: "Merci pour votre commande",
-							icon: "success",
-							confirmButtonText: "Ok",
-						});
-						// window.location.reload();
+		if (selectedOption !== 0 && tot >= 0) {
+			await fetch(`http://localhost:5003/addglobalorder`, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					user_id: selectedOption,
+					dateorder: today,
+					montanttotal: tot,
+				}),
+			})
+				.then((res) => res.json())
+				.then(
+					(result) => {
+						for (const element of tabCommand) {
+							detailOrder(element, result.order_id);
+							// pour le pop-up on utilise swal.fire
+							Swal.fire({
+								title: "Merci pour votre commande",
+								icon: "success",
+								confirmButtonText: "Ok",
+							}).then(function () {
+								//pour refresh la commande
+								setTabCommand([]);
+								setTot(0);
+							});
+						}
+					},
+
+					(error) => {
+						console.log(error);
 					}
-				},
-
-				(error) => {
-					console.log(error);
-				}
-			);
+				);
+		} else {
+			Swal.fire({
+				title: "Veuillez sélectionner un client",
+				icon: "info",
+				confirmButtonText: "Ok",
+			});
+		}
 	}
 
 	async function detailOrder(element: any, id: any) {
@@ -79,7 +112,7 @@ function Order() {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				user_id: 17,
+				user_id: selectedOption,
 				order_id: id,
 				nom: element.Nom,
 				prixunitaire: element.Prix,
@@ -101,12 +134,25 @@ function Order() {
 	}
 
 	useEffect(() => {
+		getClients();
 		getProducts();
 		setIsUpdate(false);
 	}, [update]);
 
 	return (
 		<div className="container my-5">
+			{/*liste de clients (barre select)*/}
+			<div style={{ width: "19rem" }}>
+				<Select
+					defaultValue={selectedOption}
+					onChange={(e: any) => {
+						// console.log("selected option", e.value);
+						// console.log(e.value);
+						setSelectedOption(e.value);
+					}}
+					options={results}
+				/>
+			</div>
 			<div className="row my-5">
 				<div className="col-8 mr-3 mt-2">
 					{" "}
@@ -197,12 +243,11 @@ function Order() {
 							<Button
 								variant="success"
 								onClick={() => {
+									totalOrder();
 									insertOrder();
-
-									// window.location.reload();
 								}}
 							>
-								commander
+								Commander
 							</Button>
 						</div>
 					</div>
