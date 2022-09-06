@@ -96,7 +96,6 @@ function History() {
 		getClients();
 		getOrders();
 	}, []);
-	// console.log(listOrder);
 	// console.log(listCommand);
 	return (
 		<div className="container my-5">
