@@ -57,10 +57,10 @@ const MenuItemLinks = styled(Link)`
 	padding: 0 2rem;
 	font-size: 20px;
 	text-decoration: none;
-	color: #122878;
+	color: #100a53;
 
 	&:hover {
-		background-color: #22c4f5;
+		background-color: #397bff;
 		color: #fff;
 		width: 100%;
 		height: 45px;
@@ -92,8 +92,8 @@ function Sidebar({ setuser, close, setClose }: logintype) {
 					<FaIcons.FaBars />
 				</MenuIconOpen>
 				<Button
-					style={{ marginRight: "40px" }}
-					className=" btn btn-info btn-rounded"
+					style={{ marginRight: "35px" }}
+					className=" btn btn-primary btn-rounded"
 					onClick={(e: any) => {
 						localStorage.removeItem("user");
 						localStorage.removeItem("user_id");
