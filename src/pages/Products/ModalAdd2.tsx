@@ -86,9 +86,9 @@ function ModalAdd2({product, setProduct,setAddProducts} : Modaltype) {
 						<div className="p-2 bd-highlight">
 							<div className="d-flex flex-column bd-highlight mb-3">
 								<div className="p-2 bd-highlight">
-									<FormGroup>
+									<FormGroup >
 										<Label for="image">Image : </Label>
-										<Input
+										<Input 
 											type="text"
 											className="form-control"
 											placeholder=""

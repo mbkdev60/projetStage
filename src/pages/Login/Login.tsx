@@ -24,6 +24,7 @@ function Login({ setlogin, setuserlogin }: logintype) {
 			setuserlogin(user);
 			localStorage.setItem("user_id", result.user_id);
 			localStorage.setItem("user", user.mail);
+			localStorage.setItem("prenom", result.prenom);
 		},
 
 		(error) => {
