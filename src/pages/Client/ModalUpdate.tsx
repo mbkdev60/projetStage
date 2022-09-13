@@ -1,5 +1,7 @@
+import React from "react";
 import { Button, FormGroup, Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
+import Image from "./Image";
 
 type Modaltype = {
 	clientUpdate: any;
@@ -18,17 +20,27 @@ function ModalUpdate({
 }: Modaltype) {
 	const handleClose = () => setShow(false);
 
-	async function updateClient() {
+	const [images, setImages] = React.useState<string | Blob>(clientUpdate.img);
+
+	async function updateClient(image: string) {
 		fetch(`http://localhost:5003/updateclient/${idclient}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(clientUpdate),
+			body: JSON.stringify({
+				img: image,
+				user_id: localStorage.getItem("user_id"),
+				nom: clientUpdate.nom,
+				prenom: clientUpdate.prenom,
+				mail: clientUpdate.mail,
+				add: clientUpdate.add,
+				tel: clientUpdate.tel,
+			}),
 		})
 			.then((res) => res.json())
 			.then(
 				(result) => {
-					// setClientUpdate(clientUpdate.client_id);
 					setShow(false); // pour fermer le modal
+					// window.location.reload();
 				},
 
 				(error) => {
@@ -36,6 +48,34 @@ function ModalUpdate({
 				}
 			);
 	}
+	async function modifierClient() {
+		try {
+			if (!images) {
+				updateClient(clientUpdate.img);
+			} else {
+				var formData = new FormData();
+				let img: any = images;
+				for (const i of Object.keys(img)) {
+					formData.append("imgCollection", img[i as unknown as number]);
+				}
+				await fetch(`http://localhost:5003/uploadImage`, {
+					body: formData,
+					method: "POST",
+				})
+					.then((response) => response.json())
+					.then((data: any) => {
+						updateClient(data);
+					});
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	// React.useEffect(() => {
+	// 	//console.log(clientUpdate.img);
+	// 	setImages(clientUpdate.img);
+	// }, [clientUpdate]);
 
 	return (
 		<Modal show={show} onHide={handleClose}>
@@ -47,18 +87,16 @@ function ModalUpdate({
 					<div className="p-2 bd-highlight">
 						<div className="d-flex flex-column bd-highlight mb-3">
 							<div className="p-2 bd-highlight">
-								<FormGroup>
-									<Label for="Nom">Nom : </Label>
-									<Input
-										type="text"
-										className="form-control"
-										defaultValue={clientUpdate.nom} //pour pouvoir faire des modif dans le champ input                    onChange={(e: any) => {
-										onChange={(e) => {
-											clientUpdate.nom = e.target.value;
-											setClientUpdate(clientUpdate);
-										}}
-									/>
-								</FormGroup>
+								<Label for="Nom">Nom : </Label>
+								<Input
+									type="text"
+									className="form-control"
+									defaultValue={clientUpdate.nom} //pour pouvoir faire des modif dans le champ input
+									onChange={(e) => {
+										clientUpdate.nom = e.target.value;
+										setClientUpdate(clientUpdate);
+									}}
+								/>
 							</div>
 						</div>
 					</div>
@@ -138,6 +176,16 @@ function ModalUpdate({
 							</div>
 						</div>
 					</div>
+
+					<div className="p-2 bd-highlight">
+						<div className="d-flex flex-column bd-highlight mb-3">
+							<div className="p-2 bd-highlight">
+								<FormGroup>
+									<Image setImage={setImages} images={clientUpdate.img} />
+								</FormGroup>
+							</div>
+						</div>
+					</div>
 				</div>
 			</Modal.Body>
 			<Modal.Footer>
@@ -147,7 +195,7 @@ function ModalUpdate({
 				<Button
 					variant="success"
 					onClick={() => {
-						updateClient();
+						modifierClient();
 						setShow(false);
 					}}
 				>

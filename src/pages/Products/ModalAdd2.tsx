@@ -1,7 +1,7 @@
-import React from 'react'
-import { Button, FormGroup, Modal } from 'react-bootstrap';
-import { Input, Label } from 'reactstrap';
-
+import React from "react";
+import { Button, FormGroup, Modal } from "react-bootstrap";
+import { Input, Label } from "reactstrap";
+import Image from "../Client/Image";
 
 type Modaltype = {
 	product: any;
@@ -9,30 +9,66 @@ type Modaltype = {
 	setAddProducts: Function;
 };
 
-function ModalAdd2({product, setProduct,setAddProducts} : Modaltype) {
+function ModalAdd2({ product, setProduct, setAddProducts }: Modaltype) {
 	// modal
 	const [show, setShow] = React.useState<boolean>(false);
-	const handleClose = () => setShow(false);
+	const handleClose = () => {
+		setImages("");
+		setShow(false);
+	};
 	const handleShow = () => setShow(true);
+	const [images, setImages] = React.useState("");
 
-    async function addProduct() {
-			fetch("http://localhost:5003/addproduct", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(product),
-			})
-				.then((res) => res.json())
-				.then(
-					(result) => {
-						setAddProducts(result);
-						setShow(false); // fermer le modal
-					},
+	let imageProduct = "http://localhost:5003/product.png";
 
-					(error) => {
-						console.log(error);
-					}
-				);
+	async function addProduct(image: string) {
+		fetch("http://localhost:5003/addproduct", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				image: image,
+				user_id: localStorage.getItem("user_id"),
+				nom: product.nom,
+				prix: product.prix,
+				description: product.description,
+			}),
+		})
+			.then((res) => res.json())
+			.then(
+				(result) => {
+					setAddProducts(result);
+					setImages("");
+					setShow(false); // fermer le modal
+				},
+
+				(error) => {
+					console.log(error);
+				}
+			);
+	}
+	async function RegisterProduct() {
+		if (images) {
+			try {
+				var formData = new FormData();
+				let img = images;
+				for (const i of Object.keys(img)) {
+					formData.append("imgCollection", img[i as unknown as number]);
+				}
+				await fetch(`http://localhost:5003/uploadImage`, {
+					body: formData,
+					method: "POST",
+				})
+					.then((response) => response.json())
+					.then((data: any) => {
+						addProduct(data);
+					});
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			addProduct(imageProduct);
 		}
+	}
 
 	return (
 		<>
@@ -86,14 +122,14 @@ function ModalAdd2({product, setProduct,setAddProducts} : Modaltype) {
 						<div className="p-2 bd-highlight">
 							<div className="d-flex flex-column bd-highlight mb-3">
 								<div className="p-2 bd-highlight">
-									<FormGroup >
-										<Label for="image">Image : </Label>
-										<Input 
+									<FormGroup>
+										<Label for="prix">Description : </Label>
+										<Input
 											type="text"
 											className="form-control"
 											placeholder=""
 											onChange={(e: any) => {
-												product.image = e.target.value;
+												product.description = e.target.value;
 												setProduct(product);
 											}}
 										/>
@@ -101,13 +137,23 @@ function ModalAdd2({product, setProduct,setAddProducts} : Modaltype) {
 								</div>
 							</div>
 						</div>
-                    </div>
+
+						<div className="p-2 bd-highlight">
+							<div className="d-flex flex-column bd-highlight mb-3">
+								<div className="p-2 bd-highlight">
+									<FormGroup>
+										<Image setImage={setImages} images={images} />
+									</FormGroup>
+								</div>
+							</div>
+						</div>
+					</div>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button variant="warning" onClick={handleClose}>
 						Fermer
 					</Button>
-					<Button variant="success" onClick={addProduct}>
+					<Button variant="success" onClick={RegisterProduct}>
 						Confirmer
 					</Button>
 				</Modal.Footer>
@@ -116,4 +162,4 @@ function ModalAdd2({product, setProduct,setAddProducts} : Modaltype) {
 	);
 }
 
-export default ModalAdd2
+export default ModalAdd2;

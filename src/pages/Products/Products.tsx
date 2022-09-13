@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import ModalAdd2 from "./ModalAdd2";
 import ModalUpdate2 from "./ModalUpdate2";
-import produits from "../../components/images/produits.jpg";
 
 function Products() {
 	const [idproduct, setidproduct] = React.useState();
@@ -19,6 +18,7 @@ function Products() {
 		nom: "",
 		prix: "",
 		image: "",
+		description: "",
 	});
 
 	// ajout
@@ -73,11 +73,15 @@ function Products() {
 					return (
 						<div className="col-4 mr-5 mt-2">
 							<Card style={{ width: "19rem" }}>
-								<Card.Img variant="top" src={produits} />
+								<Card.Img
+									style={{ height: "225px" }}
+									variant="top"
+									src={product.image}
+								/>
 								<Card.Body>
 									<Card.Title>Nom : {product.nom}</Card.Title>
 									<Card.Title>Prix : {product.prix} €</Card.Title>
-									<Card.Title>Image : {product.image}</Card.Title>
+									<Card.Title>Description : {product.description} </Card.Title>
 									<div className="d-flex justify-content-between">
 										<div className="p-2 bd-highlight">
 											<Button

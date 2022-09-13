@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, FormGroup, Modal } from "react-bootstrap";
 import { Input, Label } from "reactstrap";
+import Image from "../Client/Image";
 
 type Modaltype = {
 	productUpdate: any;
@@ -19,22 +20,56 @@ function ModalUpdate2({
 }: Modaltype) {
 	const handleClose = () => setShow(false);
 
-	async function updateProduct() {
+	const [images, setImages] = React.useState<string | Blob>(
+		productUpdate.image
+	);
+
+	async function updateProduct(image: string) {
 		fetch(`http://localhost:5003/updateproduct/${idproduct}`, {
 			method: "PUT",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(productUpdate),
+			body: JSON.stringify({
+				image: image,
+				user_id: localStorage.getItem("user_id"),
+				nom: productUpdate.nom,
+				prix: productUpdate.prix,
+				description: productUpdate.description,
+			}),
 		})
 			.then((res) => res.json())
 			.then(
 				(result) => {
 					setShow(false); // pour fermer le modal
+					// window.location.reload();
 				},
 
 				(error) => {
 					console.log(error);
 				}
 			);
+	}
+	async function modifierProduct() {
+		try {
+			if (!images) {
+				updateProduct(productUpdate.image);
+			} else {
+				var formData = new FormData();
+				let img: any = images;
+				for (const i of Object.keys(img)) {
+					formData.append("imgCollection", img[i as unknown as number]);
+				}
+				await fetch(`http://localhost:5003/uploadImage`, {
+					body: formData,
+					method: "POST",
+				})
+					.then((response) => response.json())
+					.then((data: any) => {
+						updateProduct(data);
+					});
+			}
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	return (
@@ -86,16 +121,26 @@ function ModalUpdate2({
 						<div className="d-flex flex-column bd-highlight mb-3">
 							<div className="p-2 bd-highlight">
 								<FormGroup>
-									<Label for="image">Image : </Label>
+									<Label for="Description">Description: </Label>
 									<Input
 										type="text"
 										className="form-control"
-										defaultValue={productUpdate.image}
+										defaultValue={productUpdate.description}
 										onChange={(e) => {
-											productUpdate.image = e.target.value;
+											productUpdate.description = e.target.value;
 											setProductUpdate(productUpdate);
 										}}
 									/>
+								</FormGroup>
+							</div>
+						</div>
+					</div>
+
+					<div className="p-2 bd-highlight">
+						<div className="d-flex flex-column bd-highlight mb-3">
+							<div className="p-2 bd-highlight">
+								<FormGroup>
+									<Image setImage={setImages} images={productUpdate.image} />
 								</FormGroup>
 							</div>
 						</div>
@@ -109,8 +154,7 @@ function ModalUpdate2({
 				<Button
 					variant="success"
 					onClick={() => {
-						console.log({ productUpdate: productUpdate });
-						updateProduct();
+						modifierProduct();
 						setShow(false);
 					}}
 				>

@@ -4,16 +4,6 @@ import { Card, Button } from "react-bootstrap";
 import ModalAdd from "./ModalAdd";
 import ModalUpdate from "./ModalUpdate";
 
-import user from "../../components/images/user.png";
-
-// const TaskText = styled.div`
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     font-size: 50px;
-//     height: 70vh;
-// `
-
 function Clients() {
 	// liste clients
 	const [listClients, setListClients] = useState([]);
@@ -26,6 +16,7 @@ function Clients() {
 	// insert
 	const [client, setClient] = useState({
 		user_id: localStorage.getItem("user_id"),
+		img: "",
 		nom: "",
 		prenom: "",
 		email: "",
@@ -60,6 +51,7 @@ function Clients() {
 			.then(
 				(result) => {
 					setListClients(result);
+					setAddClients(result.length);
 				},
 
 				(error) => {
@@ -67,7 +59,7 @@ function Clients() {
 				}
 			);
 	}
-
+	
 	useEffect(() => {
 		getClients();
 	}, [addClients]);
@@ -86,9 +78,13 @@ function Clients() {
 					// .filter((element: any) => (element.nom === "vxvx"))
 					.map((client: any) => {
 						return (
-							<div className="col-4 mr-5 mt-2">
+							<div className="col-4 mr-5 mt-2" >
 								<Card style={{ width: "19rem" }}>
-									<Card.Img variant="top" src={user} />
+									<Card.Img
+										style={{ height: "225px" }}
+										variant="top"
+										src={client.img}
+									/>
 									<Card.Body>
 										<Card.Title>Nom : {client.nom}</Card.Title>
 										<Card.Title>Prénom : {client.prenom}</Card.Title>
@@ -100,7 +96,6 @@ function Clients() {
 												<Button
 													variant="danger"
 													onClick={() => {
-														console.log({ id: client.client_id });
 														delClient(client.client_id);
 													}}
 												>
