@@ -73,12 +73,12 @@ function Clients() {
 				setClient={setClient}
 			/>
 
-			<div className="row my-5">
+			<div className="row my-5 ">
 				{listClients
 					// .filter((element: any) => (element.nom === "vxvx"))
 					.map((client: any) => {
 						return (
-							<div className="col-4 mr-5 mt-2" >
+							<div className="col-4 mr-5 mt-2 col-lg-4 col-xl-4 col-md-6 ml-0 col-sm-12 col-xs-12 my-2">
 								<Card style={{ width: "19rem" }}>
 									<Card.Img
 										style={{ height: "225px" }}

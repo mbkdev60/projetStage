@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef} from "react";
 import { Button, Modal } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 
@@ -8,7 +8,8 @@ type Modaltype = {
 	detailCmd: any;
 	setDetailCmd: Function;
 	cmd: any;
-	nomClt : any,
+	nomClt: any;
+	listClient: any;
 };
 
 function ModalDetailOrder({
@@ -18,16 +19,20 @@ function ModalDetailOrder({
 	setDetailCmd,
 	cmd,
 	nomClt,
+	listClient,
 }: Modaltype) {
 	const handleClose = () => setShow(false);
 	const componentRef = useRef<HTMLDivElement>(null);
-
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header>
 				<Modal.Title>
-					<h4>Détail de la commande N° : {cmd}</h4>
-					<h4>Au nom de : {nomClt}</h4>
+					<h4 style={{ color: "blue" }}>Détail de la commande N° : {cmd}</h4>
+					<h4 >Nom : {nomClt}</h4>
+					<h4 >Prenom : {listClient.prenom}</h4>
+					<h4 >Addrese : {listClient.add}</h4>
+					<h4 >Tel : {listClient.tel}</h4>
+					<h4 >E-mail : {listClient.mail}</h4>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -37,7 +42,6 @@ function ModalDetailOrder({
 							<tr>
 								<th>Nom</th>
 								<th>Prix Unitaire</th>
-								<th>Image</th>
 								<th>Quantité</th>
 								<th>Total</th>
 							</tr>
@@ -49,7 +53,6 @@ function ModalDetailOrder({
 									<tr>
 										<td>{data.nom}</td>
 										<td>{data.prixunitaire} €</td>
-										<td>{data.image}</td>
 										<td>{data.quantite}</td>
 										<td>{data.prixtotal} €</td>
 									</tr>
@@ -65,7 +68,7 @@ function ModalDetailOrder({
 				</Button>
 
 				<ReactToPrint
-					trigger={() => <Button> Imprimer </Button>}
+					trigger={() => <Button>Imprimer </Button>}
 					content={() => componentRef.current}
 				/>
 				<div style={{ display: "none" }}>
@@ -73,8 +76,12 @@ function ModalDetailOrder({
 						<div>
 							<Modal.Header>
 								<Modal.Title>
-									<h5	>Détail de la commande N° : {cmd}</h5>
-									<h5>Au nom de : {nomClt}</h5>
+									<h5>Détail de la commande N° : {cmd}</h5>
+									<h5>nom : {nomClt}</h5>
+									{/* <h5>prenom : {listClient.prenom}</h5>
+									<h5>adresse : {listClient.add}</h5>
+									<h5>telephone : {listClient.tel}</h5>
+									<h5>Email : {listClient.mail}</h5> */}
 								</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>
@@ -84,7 +91,6 @@ function ModalDetailOrder({
 											<tr>
 												<th>Nom</th>
 												<th>Prix Unitaire</th>
-												<th>Image</th>
 												<th>Quantité</th>
 												<th>Total</th>
 											</tr>
@@ -96,7 +102,6 @@ function ModalDetailOrder({
 													<tr>
 														<td>{data.nom}</td>
 														<td>{data.prixunitaire} €</td>
-														<td>{data.image}</td>
 														<td>{data.quantite}</td>
 														<td>{data.prixtotal} €</td>
 													</tr>

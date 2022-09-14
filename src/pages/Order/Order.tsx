@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
-import produits from "../../components/images/produits.jpg";
 import ModalUpdateOrder from "./ModalUpdateOrder";
 import Swal from "sweetalert2"; //pour le pop-up confirmation panier
 import Select from "react-select";
@@ -146,27 +145,27 @@ function Order() {
 				<Select
 					defaultValue={selectedOption}
 					onChange={(e: any) => {
-						// console.log("selected option", e.value);
-						// console.log(e.value);
 						setSelectedOption(e.value);
 					}}
 					options={results}
 				/>
 			</div>
-			<div className="row my-5">
-				<div className="col-8 mr-3 mt-2">
+			<div className="row my-5 ">
+				<div className="col-8 mr-3 mt-2 ">
 					{" "}
 					{/* 2/3 de l'écran col-8*/}
-					<div className="row">
+					<div className="row ">
 						{listProducts.map((product: any) => {
 							return (
-								<div className="col-sm mt-3">
+								<div className="col-sm mt-3  ">
 									<Card style={{ width: "19rem" }}>
-										<Card.Img variant="top" src={produits} />
+										<Card.Img variant="top" src={product.image} />
 										<Card.Body>
 											<Card.Title>Nom : {product.nom}</Card.Title>
 											<Card.Title>Prix : {product.prix}</Card.Title>
-											<Card.Title>Image : {product.image}</Card.Title>
+											<Card.Title>
+												Description : {product.description}
+											</Card.Title>
 											<div className="d-flex justify-content-center">
 												<div className="p-2 bd-highlight">
 													<Button
@@ -204,7 +203,6 @@ function Order() {
 							<tr>
 								<th>Nom</th>
 								<th>Prix</th>
-								<th>Image</th>
 								<th>Quantité</th>
 								<th>Total</th>
 							</tr>
@@ -215,7 +213,6 @@ function Order() {
 									<tr>
 										<td>{data.Nom}</td>
 										<td>{data.Prix}€</td>
-										<td>{data.Image}</td>
 										<td>{data.Quantité}</td>
 										<td>{data.Total}€</td>
 										<td>

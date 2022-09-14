@@ -13,8 +13,9 @@ function History() {
 	const [show, setShow] = React.useState(false);
 	const [cmd, setCmd] = useState(0);
 	const [nomClt, setNomClt] = React.useState<any>();
+	const [idClt, setidClt] = React.useState<any>();
 	const componentRef = useRef<HTMLDivElement>(null);
-	// const [listCommand, setlistCommand] = React.useState<any>();
+	const [listClient, setListClient] = React.useState<any>([]);
 
 	async function getClients() {
 		await fetch(
@@ -91,6 +92,21 @@ function History() {
 	listClients.forEach((element: any, index: any) => {
 		results.push({ value: element.client_id, label: element.nom });
 	});
+	async function detailClt() {
+		fetch(`http://localhost:5003/getclient/${idClt}`, {
+			method: "GET",
+		})
+			.then((res) => res.json())
+			.then(
+				(result) => {
+					setListClient(result);
+				},
+
+				(error) => {
+					console.log(error);
+				}
+			);
+	}
 
 	useEffect(() => {
 		getClients();
@@ -108,6 +124,7 @@ function History() {
 							setSelectedOption(e.value);
 							e.value === 0 ? getOrders() : getListCommand(e.value);
 							setNomClt(e.label); /*Pour récupérer le nom du clt*/
+							setidClt(e.value);
 						}}
 						options={results}
 					/>
@@ -126,7 +143,10 @@ function History() {
 					/>
 					<div style={{ display: "none" }}>
 						<div ref={componentRef}>
-							<h3 className="text-center" style={{marginTop: "30px"}}> Commandes du Client : {nomClt}</h3>
+							<h3 className="text-center" style={{ marginTop: "30px" }}>
+								{" "}
+								Commandes du Client : {nomClt}
+							</h3>
 							<table className="table mt-5 text-center">
 								<thead>
 									<tr>
@@ -151,14 +171,15 @@ function History() {
 												</tr>
 											);
 										})}
-									<ModalDetailOrder
+									{/* <ModalDetailOrder
 										show={show}
 										setShow={setShow}
 										detailCmd={detailCmd}
 										setDetailCmd={setDetailCmd}
 										nomClt={nomClt}
 										cmd={cmd}
-									/>
+										listClient={listClient}
+									/> */}
 								</tbody>
 							</table>
 						</div>
@@ -195,6 +216,7 @@ function History() {
 													getProductOrder(data.order_id);
 													setShow(true);
 													setCmd(data.order_id);
+													detailClt();
 												}}
 											>
 												Détails
@@ -210,6 +232,7 @@ function History() {
 							setDetailCmd={setDetailCmd}
 							cmd={cmd}
 							nomClt={nomClt}
+							listClient={listClient}
 						/>
 					</tbody>
 				</table>
