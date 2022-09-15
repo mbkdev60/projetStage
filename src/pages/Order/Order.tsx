@@ -12,9 +12,17 @@ function Order() {
 	const [tot, setTot] = React.useState(0);
 	const [tabCommand, setTabCommand] = useState<any>([]);
 	const [listClients, setListClients] = useState([]);
-	const [selectedOption, setSelectedOption] = useState<any>({
-		client_id: "",
-		nomclient: "",
+	const [nomClt, setNomClt] = React.useState<any>();
+	const [idClt, setidClt] = React.useState<any>();
+	// const [selectedOption, setSelectedOption] = useState<any>({
+	// 	client_id: "",
+	// 	nomclient: "",
+	// });
+	const [selectedOption, setSelectedOption] = React.useState(0);
+	const results: any = [];
+
+	listClients.forEach((element: any, index: any) => {
+		results.push({ value: element.client_id, label: element.nom });
 	});
 
 	function getClients() {
@@ -32,12 +40,6 @@ function Order() {
 				}
 			);
 	}
-
-	const results: any = [];
-	
-	listClients.forEach((element: any, index: any) => {
-		results.push({ value: element.client_id, label: element.nom });
-	});
 
 	function getProducts() {
 		fetch(`http://localhost:5003/products/${localStorage.getItem("user_id")}`, {
@@ -66,14 +68,17 @@ function Order() {
 
 	async function insertOrder() {
 		var today = new Date();
-		if (selectedOption !== 0 && tot >= 0) {
+		
+		if (selectedOption !== 0 && tot > 0) {
 			await fetch(`http://localhost:5003/addglobalorder`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					user_id: localStorage.getItem("user_id"),
-					client_id: selectedOption.client_id,
-					nomclient: selectedOption.nomclient,
+					client_id: idClt,
+					nomclient: nomClt,
+					// client_id: selectedOption.client_id,
+					// nomclient: selectedOption.nom,
 					dateorder: today,
 					montanttotal: tot,
 				}),
@@ -101,7 +106,7 @@ function Order() {
 				);
 		} else {
 			Swal.fire({
-				title: "Veuillez sélectionner un client",
+				title: "Veuillez sélectionner un client et au moins un produit",
 				icon: "info",
 				confirmButtonText: "Ok",
 			});
@@ -147,10 +152,14 @@ function Order() {
 				<Select
 					defaultValue={selectedOption}
 					onChange={(e: any) => {
-						setSelectedOption({
-							nomclient: e.label,
-							client_id: e.value,
-						});
+						// setSelectedOption({
+						// 	nomclient: e.label,
+						// 	client_id: e.value,
+						// });
+						setSelectedOption(e.value);
+						//	e.value === 0 ? getOrders() : getListCommand(e.value);
+						setNomClt(e.label); /*Pour récupérer le nom du clt*/
+						setidClt(e.value);
 					}}
 					options={results}
 				/>
@@ -168,7 +177,9 @@ function Order() {
 										<Card.Body>
 											<Card.Title>Nom : {product.nom}</Card.Title>
 											<Card.Title>Prix : {product.prix}</Card.Title>
-											<Card.Title>Description : {product.description}</Card.Title>
+											<Card.Title>
+												Description : {product.description}
+											</Card.Title>
 											<div className="d-flex justify-content-center">
 												<div className="p-2 bd-highlight">
 													<Button

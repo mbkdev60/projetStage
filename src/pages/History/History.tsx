@@ -17,6 +17,12 @@ function History() {
 	const componentRef = useRef<HTMLDivElement>(null);
 	const [listClient, setListClient] = React.useState<any>([]);
 
+	const results: any = [];
+
+	listClients.forEach((element: any, index: any) => {
+		results.push({ value: element.client_id, label: element.nom });
+	});
+
 	async function getClients() {
 		await fetch(
 			`http://localhost:5003/clients/${localStorage.getItem("user_id")}`,
@@ -55,22 +61,6 @@ function History() {
 			);
 	}
 
-	async function getListCommand(idclient: any) {
-		await fetch(`http://localhost:5003/getlistcommand/${idclient}`, {
-			method: "GET",
-		})
-			.then((res) => res.json())
-			.then(
-				(result) => {
-					setlistOrder(result);
-				},
-
-				(error) => {
-					console.log(error);
-				}
-			);
-	}
-
 	async function getDetailOrder(order_id: any) {
 		await fetch(`http://localhost:5003/getdetailorder/${order_id}`, {
 			method: "GET",
@@ -91,11 +81,6 @@ function History() {
 			);
 	}
 
-	const results: any = [];
-	results.push({ value: 0, label: "Client..." });
-	listClients.forEach((element: any, index: any) => {
-		results.push({ value: element.client_id, label: element.nom });
-	});
 	async function detailClt(idclient: string) {
 		fetch(`http://localhost:5003/getclient/${idclient}`, {
 			method: "GET",
