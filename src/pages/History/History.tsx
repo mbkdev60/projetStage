@@ -129,7 +129,7 @@ function History() {
 						)}
 						content={() => componentRef.current}
 					/>
-					<div style={{ display: "none" }}>
+					<div >
 						<div ref={componentRef}>
 							<h3 className="text-center" style={{ marginTop: "30px" }}>
 								{" "}
