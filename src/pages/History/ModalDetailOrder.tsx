@@ -1,4 +1,4 @@
-import { useRef} from "react";
+import { useRef } from "react";
 import { Button, Modal } from "react-bootstrap";
 import ReactToPrint from "react-to-print";
 
@@ -8,7 +8,6 @@ type Modaltype = {
 	detailCmd: any;
 	setDetailCmd: Function;
 	cmd: any;
-	nomClt: any;
 	listClient: any;
 };
 
@@ -18,7 +17,6 @@ function ModalDetailOrder({
 	detailCmd,
 	setDetailCmd,
 	cmd,
-	nomClt,
 	listClient,
 }: Modaltype) {
 	const handleClose = () => setShow(false);
@@ -27,12 +25,12 @@ function ModalDetailOrder({
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header>
 				<Modal.Title>
-					<h4 style={{ color: "blue" }}>Détail de la commande N° : {cmd}</h4>
-					<h4 >Nom : {nomClt}</h4>
-					<h4 >Prenom : {listClient.prenom}</h4>
-					<h4 >Addrese : {listClient.add}</h4>
-					<h4 >Tel : {listClient.tel}</h4>
-					<h4 >E-mail : {listClient.mail}</h4>
+					<h4 style={{ color: "blue" }}>Détail de la commande N° {cmd}</h4>
+					<h4>Nom : {listClient.nom}</h4>
+					<h4>Prenom : {listClient.prenom}</h4>
+					<h4>Addrese : {listClient.add}</h4>
+					<h4>Tel : {listClient.tel}</h4>
+					<h4>E-mail : {listClient.mail}</h4>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -77,11 +75,11 @@ function ModalDetailOrder({
 							<Modal.Header>
 								<Modal.Title>
 									<h5>Détail de la commande N° : {cmd}</h5>
-									<h5>nom : {nomClt}</h5>
-									{/* <h5>prenom : {listClient.prenom}</h5>
-									<h5>adresse : {listClient.add}</h5>
-									<h5>telephone : {listClient.tel}</h5>
-									<h5>Email : {listClient.mail}</h5> */}
+									<h5>Nom : {listClient.nom}</h5>
+									<h5>Prenom : {listClient.prenom}</h5>
+									<h5>Adresse : {listClient.add}</h5>
+									<h5>Tel : {listClient.tel}</h5>
+									<h5>E-mail : {listClient.mail}</h5>
 								</Modal.Title>
 							</Modal.Header>
 							<Modal.Body>

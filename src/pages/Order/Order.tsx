@@ -12,7 +12,10 @@ function Order() {
 	const [tot, setTot] = React.useState(0);
 	const [tabCommand, setTabCommand] = useState<any>([]);
 	const [listClients, setListClients] = useState([]);
-	const [selectedOption, setSelectedOption] = useState(0);
+	const [selectedOption, setSelectedOption] = useState<any>({
+		client_id: "",
+		nomclient: "",
+	});
 
 	function getClients() {
 		fetch(`http://localhost:5003/clients/${localStorage.getItem("user_id")}`, {
@@ -31,6 +34,7 @@ function Order() {
 	}
 
 	const results: any = [];
+	
 	listClients.forEach((element: any, index: any) => {
 		results.push({ value: element.client_id, label: element.nom });
 	});
@@ -62,15 +66,14 @@ function Order() {
 
 	async function insertOrder() {
 		var today = new Date();
-		// console.log("🚀 ~ file: order.tsx ~ line 66 ~ insertOrder ~ today", today);
-		// console.log(Date());
-
 		if (selectedOption !== 0 && tot >= 0) {
 			await fetch(`http://localhost:5003/addglobalorder`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					user_id: selectedOption,
+					user_id: localStorage.getItem("user_id"),
+					client_id: selectedOption.client_id,
+					nomclient: selectedOption.nomclient,
 					dateorder: today,
 					montanttotal: tot,
 				}),
@@ -92,7 +95,6 @@ function Order() {
 							});
 						}
 					},
-
 					(error) => {
 						console.log(error);
 					}
@@ -107,7 +109,7 @@ function Order() {
 	}
 
 	async function detailOrder(element: any, id: any) {
-		await fetch(`http://localhost:5003/addproductorder`, {
+		await fetch(`http://localhost:5003/adddetailorder`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
@@ -145,27 +147,28 @@ function Order() {
 				<Select
 					defaultValue={selectedOption}
 					onChange={(e: any) => {
-						setSelectedOption(e.value);
+						setSelectedOption({
+							nomclient: e.label,
+							client_id: e.value,
+						});
 					}}
 					options={results}
 				/>
 			</div>
-			<div className="row my-5 ">
-				<div className="col-8 mr-3 mt-2 ">
+			<div className="row my-5">
+				<div className="col-8 mr-3 mt-2">
 					{" "}
 					{/* 2/3 de l'écran col-8*/}
-					<div className="row ">
+					<div className="row">
 						{listProducts.map((product: any) => {
 							return (
-								<div className="col-sm mt-3  ">
+								<div className="col-sm mt-3">
 									<Card style={{ width: "19rem" }}>
 										<Card.Img variant="top" src={product.image} />
 										<Card.Body>
 											<Card.Title>Nom : {product.nom}</Card.Title>
 											<Card.Title>Prix : {product.prix}</Card.Title>
-											<Card.Title>
-												Description : {product.description}
-											</Card.Title>
+											<Card.Title>Description : {product.description}</Card.Title>
 											<div className="d-flex justify-content-center">
 												<div className="p-2 bd-highlight">
 													<Button

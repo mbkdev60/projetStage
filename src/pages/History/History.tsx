@@ -37,7 +37,26 @@ function History() {
 	}
 
 	async function getOrders() {
-		await fetch(`http://localhost:5003/getglobalOrder`, {
+		await fetch(
+			`http://localhost:5003/getglobalOrder/${localStorage.getItem("user_id")}`,
+			{
+				method: "GET",
+			}
+		)
+			.then((res) => res.json())
+			.then(
+				(result) => {
+					setlistOrder(result);
+				},
+
+				(error) => {
+					console.log(error);
+				}
+			);
+	}
+
+	async function getListCommand(idclient: any) {
+		await fetch(`http://localhost:5003/getlistcommand/${idclient}`, {
 			method: "GET",
 		})
 			.then((res) => res.json())
@@ -52,24 +71,8 @@ function History() {
 			);
 	}
 
-	async function getListCommand(user_id: any) {
-		await fetch(`http://localhost:5003/getlistcommand/${user_id}`, {
-			method: "GET",
-		})
-			.then((res) => res.json())
-			.then(
-				(result) => {
-					setlistOrder(result);
-				},
-
-				(error) => {
-					console.log(error);
-				}
-			);
-	}
-
-	async function getProductOrder(order_id: any) {
-		await fetch(`http://localhost:5003/getproductorder/${order_id}`, {
+	async function getDetailOrder(order_id: any) {
+		await fetch(`http://localhost:5003/getdetailorder/${order_id}`, {
 			method: "GET",
 		})
 			.then((res) => res.json())
@@ -87,13 +90,14 @@ function History() {
 				}
 			);
 	}
+
 	const results: any = [];
-	results.push({ value: 0, label: "Tous..." });
+	results.push({ value: 0, label: "Client..." });
 	listClients.forEach((element: any, index: any) => {
 		results.push({ value: element.client_id, label: element.nom });
 	});
-	async function detailClt() {
-		fetch(`http://localhost:5003/getclient/${idClt}`, {
+	async function detailClt(idclient: string) {
+		fetch(`http://localhost:5003/getclient/${idclient}`, {
 			method: "GET",
 		})
 			.then((res) => res.json())
@@ -120,9 +124,8 @@ function History() {
 					<Select
 						defaultValue={selectedOption}
 						onChange={(e: any) => {
-							console.log("selected option", e.value);
 							setSelectedOption(e.value);
-							e.value === 0 ? getOrders() : getListCommand(e.value);
+							//	e.value === 0 ? getOrders() : getListCommand(e.value);
 							setNomClt(e.label); /*Pour récupérer le nom du clt*/
 							setidClt(e.value);
 						}}
@@ -151,21 +154,17 @@ function History() {
 								<thead>
 									<tr>
 										<th>N° de Commande</th>
-										<th>Réf Client</th>
 										<th>Date</th>
 										<th>Montant Total</th>
 									</tr>
 								</thead>
 								<tbody>
 									{listOrder
-										// ?.filter(
-										// 	(element: any) => element.user_id === user_id
-										// )
+										?.filter((el: any) => el.client_id === idClt)
 										?.map((data: any, index: number) => {
 											return (
 												<tr>
 													<td>{data.order_id}</td>
-													<td>{data.user_id}</td>
 													<td>{data.dateorder}</td>
 													<td>{data.montanttotal} €</td>
 												</tr>
@@ -176,7 +175,6 @@ function History() {
 										setShow={setShow}
 										detailCmd={detailCmd}
 										setDetailCmd={setDetailCmd}
-										nomClt={nomClt}
 										cmd={cmd}
 										listClient={listClient}
 									/> */}
@@ -192,46 +190,42 @@ function History() {
 					<thead>
 						<tr>
 							<th>N° de Commande</th>
-							<th>Réf Client</th>
+							<th>Client</th>
 							<th>Date</th>
 							<th>Montant Total</th>
 						</tr>
 					</thead>
 					<tbody>
-						{listOrder
-							// ?.filter(
-							// 	(element: any) => element.user_id === user_id
-							// )
-							?.map((data: any, index: number) => {
-								return (
-									<tr>
-										<td>{data.order_id}</td>
-										<td>{data.user_id}</td>
-										<td>{data.dateorder}</td>
-										<td>{data.montanttotal} €</td>
-										<td>
-											<Button
-												className=" btn btn-info btn-rounded"
-												onClick={() => {
-													getProductOrder(data.order_id);
-													setShow(true);
-													setCmd(data.order_id);
-													detailClt();
-												}}
-											>
-												Détails
-											</Button>
-										</td>
-									</tr>
-								);
-							})}
+						{listOrder?.map((data: any, index: number) => {
+							return (
+								<tr>
+									<td>{data.order_id}</td>
+									<td>{data.nomclient}</td>
+									<td>{data.dateorder}</td>
+									<td>{data.montanttotal} €</td>
+									<td>
+										<Button
+											className=" btn btn-info btn-rounded"
+											onClick={() => {
+												getDetailOrder(data.order_id);
+												setShow(true);
+												setCmd(data.order_id);
+												detailClt(data.client_id);
+											}}
+											// disabled={selectedOption === 0}
+										>
+											Détails
+										</Button>
+									</td>
+								</tr>
+							);
+						})}
 						<ModalDetailOrder
 							show={show}
 							setShow={setShow}
 							detailCmd={detailCmd}
 							setDetailCmd={setDetailCmd}
 							cmd={cmd}
-							nomClt={nomClt}
 							listClient={listClient}
 						/>
 					</tbody>
