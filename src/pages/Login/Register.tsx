@@ -4,7 +4,7 @@ import { Button, Input, Label } from "reactstrap";
 type logintype = {
 	setlogin: Function;
 };
-function Register({ setlogin}: logintype) {
+function Register({ setlogin }: logintype) {
 	const [adduser, setAdduser] = useState({
 		nom: "",
 		prenom: "",

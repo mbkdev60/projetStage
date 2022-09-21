@@ -19,7 +19,7 @@ function ModalAdd({ client, setClient, setAddClients }: Modaltype) {
 	let imageClient = "http://localhost:5003/user.png";
 
 	async function addClient(image: string) {
-			fetch("http://localhost:5003/addclient", {
+		fetch("http://localhost:5003/addclient", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({

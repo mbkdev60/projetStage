@@ -198,6 +198,7 @@ function Order() {
 								</div>
 							);
 						})}
+						
 						<ModalUpdateOrder
 							show={show}
 							setShow={setShow}

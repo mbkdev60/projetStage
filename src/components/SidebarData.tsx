@@ -26,4 +26,9 @@ export const SidebarData = [
 		path: "/history",
 		icon: <FaIcons.FaHistory />,
 	},
+	{
+		title: "Contact",
+		path: "/contact",
+		icon: <FaIcons.FaAddressCard />,
+	},
 ];
